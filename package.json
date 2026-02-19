@@ -1,9 +1,12 @@
 {
   "name": "solana-rpc-client-generator",
   "version": "1.0.0",
-  "description": "OpenRPC-based client generator for Solana JSON-RPC API",
+  "description": "Generate type-safe Solana RPC clients in 10 languages from OpenRPC spec",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "solana-rpc-gen": "./bin/cli.ts"
+  },
   "scripts": {
     "generate": "npm run generate:ts && npm run generate:go && npm run generate:python && npm run generate:java && npm run generate:csharp && npm run generate:rust && npm run generate:php && npm run generate:ruby && npm run generate:swift && npm run generate:kotlin",
     "generate:ts": "ts-node --esm scripts/generate-client.ts",

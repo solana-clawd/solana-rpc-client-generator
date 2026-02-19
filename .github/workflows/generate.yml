@@ -1,0 +1,145 @@
+name: Generate & Test Clients
+
+on:
+  push:
+    paths:
+      - 'spec/**'
+      - 'scripts/**'
+  pull_request:
+    paths:
+      - 'spec/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate all clients
+        run: npm run generate
+      
+      - name: Upload generated clients
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+
+  test-typescript:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - name: Test TypeScript client
+        run: npm test
+
+  test-python:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test Python client
+        run: |
+          cd generated/python
+          python -c "
+          from solana_rpc_client import SolanaRpcClient, Endpoints
+          client = SolanaRpcClient(Endpoints.DEVNET)
+          version = client.get_version()
+          print('✅ Python client works! Version:', version.get('solana-core'))
+          "
+
+  test-go:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Test Go client
+        run: |
+          cd generated/go
+          go build ./...
+          echo "✅ Go client compiles!"
+
+  test-rust:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test Rust client
+        run: |
+          cd generated/rust
+          cargo check
+          echo "✅ Rust client compiles!"
+
+  test-java:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Test Java client
+        run: |
+          cd generated/java
+          mvn compile -q
+          echo "✅ Java client compiles!"
+
+  test-csharp:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-clients
+          path: generated/
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0'
+      - name: Test C# client
+        run: |
+          cd generated/csharp
+          dotnet build
+          echo "✅ C# client compiles!"

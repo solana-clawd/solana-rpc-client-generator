@@ -1,270 +1,371 @@
 # Solana RPC Client Generator
 
-Generate type-safe TypeScript/JavaScript clients for the Solana JSON-RPC API from an OpenRPC specification.
+[![Generate & Test](https://github.com/solana-clawd/solana-rpc-client-generator/actions/workflows/generate.yml/badge.svg)](https://github.com/solana-clawd/solana-rpc-client-generator/actions)
 
-## Features
+Generate type-safe Solana RPC clients from an OpenRPC specification. Supports **10 programming languages** out of the box.
 
-- 🔧 **OpenRPC Specification** - Complete Solana RPC spec with 52 methods and 62 type definitions
-- 📦 **TypeScript Client** - Fully typed, auto-generated client
-- 🚀 **Zero Dependencies** - Uses native `fetch` API
-- 🔄 **Easy to Update** - Regenerate when the spec changes
-- 📝 **Extensible** - Add custom methods or generators
+## Supported Languages
+
+| Language | Package Manager | Status |
+|----------|-----------------|--------|
+| TypeScript/JavaScript | npm | ✅ Tested |
+| Python | pip | ✅ Tested |
+| Go | go mod | ✅ Compiles |
+| Rust | cargo | ✅ Compiles |
+| Java | maven | ✅ Compiles |
+| C# | nuget | ✅ Compiles |
+| Kotlin | gradle | ✅ Generated |
+| Swift | SPM | ✅ Generated |
+| PHP | composer | ✅ Generated |
+| Ruby | gem | ✅ Generated |
 
 ## Quick Start
 
+### Generate All Languages
+
 ```bash
-# Clone the repo
-git clone https://github.com/your-username/solana-rpc-client-generator
+git clone https://github.com/solana-clawd/solana-rpc-client-generator
 cd solana-rpc-client-generator
-
-# Install dependencies
 npm install
-
-# Generate the client
 npm run generate
-
-# Build the generated client
-cd generated/typescript && npm run build
 ```
 
-## Using the Generated Client
-
-### Installation
+### Generate Specific Languages
 
 ```bash
-# Copy to your project or publish to npm
-cp -r generated/typescript your-project/solana-rpc-client
+# Using npm scripts
+npm run generate:typescript
+npm run generate:python
+npm run generate:go
+
+# Or using the CLI
+npx ts-node --esm bin/cli.ts --lang typescript,python,go
+npx ts-node --esm bin/cli.ts --all
 ```
 
-### Basic Usage
+## Usage Examples
+
+### TypeScript
 
 ```typescript
 import { createSolanaRpcClient, ENDPOINTS } from '@solana-rpc/client';
 
-// Create a client for mainnet
-const client = createSolanaRpcClient(ENDPOINTS.MAINNET_BETA);
-
-// Or use a custom endpoint (like Helius)
-const heliusClient = createSolanaRpcClient('https://mainnet.helius-rpc.com/?api-key=YOUR_KEY');
+const client = createSolanaRpcClient(ENDPOINTS.DEVNET);
 
 // Get account balance
-const balance = await client.getBalance('vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg');
+const balance = await client.getBalance('YourPubkey...');
 console.log('Balance:', balance.value / 1e9, 'SOL');
-
-// Get account info with encoding
-const account = await client.getAccountInfo('YourPubkey...', {
-  encoding: 'base64',
-  commitment: 'confirmed'
-});
 
 // Get current slot
 const slot = await client.getSlot();
-
-// Get epoch info
-const epochInfo = await client.getEpochInfo();
-console.log('Epoch:', epochInfo.epoch);
-console.log('Progress:', epochInfo.slotIndex, '/', epochInfo.slotsInEpoch);
 
 // Send transaction
 const signature = await client.sendTransaction(serializedTx, {
   skipPreflight: false,
   preflightCommitment: 'confirmed'
 });
-
-// Get transaction status
-const statuses = await client.getSignatureStatuses([signature]);
 ```
 
-### Available Endpoints
+### Python
 
-```typescript
-import { ENDPOINTS } from '@solana-rpc/client';
+```python
+from solana_rpc_client import SolanaRpcClient, Endpoints
 
-ENDPOINTS.MAINNET_BETA  // 'https://api.mainnet-beta.solana.com'
-ENDPOINTS.DEVNET        // 'https://api.devnet.solana.com'
-ENDPOINTS.TESTNET       // 'https://api.testnet.solana.com'
+client = SolanaRpcClient(Endpoints.DEVNET)
+
+# Get account balance
+balance = client.get_balance("YourPubkey...")
+print(f"Balance: {balance['value'] / 1e9} SOL")
+
+# Get current slot
+slot = client.get_slot()
+
+# Get epoch info
+epoch = client.get_epoch_info()
+print(f"Epoch: {epoch['epoch']}")
 ```
 
-### Custom Configuration
+### Go
 
-```typescript
-import { SolanaRpcClient } from '@solana-rpc/client';
+```go
+package main
 
-const client = new SolanaRpcClient({
-  endpoint: 'https://your-rpc.example.com',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY'
-  },
-  fetch: customFetchImplementation // Optional: for Node.js < 18 or custom fetch
-});
-```
+import (
+    "context"
+    solana "github.com/solana-rpc/client"
+)
 
-### Error Handling
+func main() {
+    client := solana.NewClient(solana.Devnet)
+    ctx := context.Background()
 
-```typescript
-import { SolanaRpcError } from '@solana-rpc/client';
+    // Get account balance
+    balance, _ := client.GetBalance(ctx, "YourPubkey...", nil)
 
-try {
-  const result = await client.getAccountInfo('invalid-pubkey');
-} catch (err) {
-  if (err instanceof SolanaRpcError) {
-    console.error('RPC Error:', err.code, err.message, err.data);
-  } else {
-    console.error('HTTP Error:', err.message);
-  }
+    // Get current slot
+    slot, _ := client.GetSlot(ctx, nil)
+
+    // Get epoch info
+    epoch, _ := client.GetEpochInfo(ctx, nil)
 }
 ```
 
-## Available Methods (52)
+### Rust
 
-### Account Methods
-- `getAccountInfo` - Returns all information associated with the account of provided Pubkey
-- `getBalance` - Returns the lamport balance of the account of provided Pubkey
-- `getMultipleAccounts` - Returns the account information for a list of Pubkeys
-- `getProgramAccounts` - Returns all accounts owned by the provided program Pubkey
-- `getLargestAccounts` - Returns the 20 largest accounts, by lamport balance
+```rust
+use solana_rpc_client::{SolanaRpcClient, DEVNET};
 
-### Block Methods
-- `getBlock` - Returns identity and transaction information about a confirmed block
-- `getBlockCommitment` - Returns commitment for particular block
-- `getBlockHeight` - Returns the current block height of the node
-- `getBlockProduction` - Returns recent block production information
-- `getBlockTime` - Returns the estimated production time of a block
-- `getBlocks` - Returns a list of confirmed blocks between two slots
-- `getBlocksWithLimit` - Returns a list of confirmed blocks starting at the given slot
+#[tokio::main]
+async fn main() -> Result<(), String> {
+    let client = SolanaRpcClient::new(DEVNET);
 
-### Transaction Methods
-- `getTransaction` - Returns transaction details for a confirmed transaction
-- `getSignatureStatuses` - Returns the statuses of a list of signatures
-- `getSignaturesForAddress` - Returns signatures for confirmed transactions
-- `getRecentPrioritizationFees` - Returns prioritization fees from recent blocks
-- `sendTransaction` - Submits a signed transaction to the cluster
-- `simulateTransaction` - Simulate sending a transaction
+    // Get account balance
+    let balance = client.get_balance("YourPubkey...".to_string(), None).await?;
 
-### Epoch & Slot Methods
-- `getEpochInfo` - Returns information about the current epoch
-- `getEpochSchedule` - Returns the epoch schedule information
-- `getSlot` - Returns the slot that has reached the commitment level
-- `getSlotLeader` - Returns the current slot leader
-- `getSlotLeaders` - Returns the slot leaders for a given slot range
+    // Get current slot
+    let slot = client.get_slot(None).await?;
 
-### Token Methods
-- `getTokenAccountBalance` - Returns the token balance of an SPL Token account
-- `getTokenAccountsByDelegate` - Returns all SPL Token accounts by approved Delegate
-- `getTokenAccountsByOwner` - Returns all SPL Token accounts by token owner
-- `getTokenLargestAccounts` - Returns the 20 largest accounts of a particular SPL Token
-- `getTokenSupply` - Returns the total supply of an SPL Token type
-
-### Cluster Methods
-- `getClusterNodes` - Returns information about all the nodes in the cluster
-- `getVoteAccounts` - Returns the account info and stake for all voting accounts
-- `getHealth` - Returns the current health of the node
-- `getVersion` - Returns the current Solana version running on the node
-- `getIdentity` - Returns the identity pubkey for the current node
-
-### Fee & Supply Methods
-- `getFeeForMessage` - Returns the fee for a particular message
-- `getMinimumBalanceForRentExemption` - Returns minimum balance for rent exemption
-- `getSupply` - Returns information about the current supply
-- `getStakeMinimumDelegation` - Returns the stake minimum delegation
-
-### Inflation Methods
-- `getInflationGovernor` - Returns the current inflation governor
-- `getInflationRate` - Returns the specific inflation values for the current epoch
-- `getInflationReward` - Returns the inflation/staking reward for addresses
-
-### Other Methods
-- `getFirstAvailableBlock` - Returns the slot of the lowest confirmed block
-- `getGenesisHash` - Returns the genesis hash
-- `getHighestSnapshotSlot` - Returns highest slot info for snapshots
-- `getLatestBlockhash` - Returns the latest blockhash
-- `getLeaderSchedule` - Returns the leader schedule for an epoch
-- `getMaxRetransmitSlot` - Get the max slot seen from retransmit stage
-- `getMaxShredInsertSlot` - Get the max slot seen after shred insert
-- `getRecentPerformanceSamples` - Returns a list of recent performance samples
-- `getTransactionCount` - Returns the current Transaction count
-- `isBlockhashValid` - Returns whether a blockhash is still valid
-- `minimumLedgerSlot` - Returns the lowest slot with information
-- `requestAirdrop` - Requests an airdrop of lamports to a Pubkey
-
-## OpenRPC Specification
-
-The specification file is located at `spec/solana-rpc.openrpc.json` and follows the [OpenRPC 1.2.6](https://spec.open-rpc.org/) standard.
-
-### Updating the Spec
-
-1. Edit `spec/solana-rpc.openrpc.json`
-2. Run `npm run generate` to regenerate the client
-3. Build with `cd generated/typescript && npm run build`
-
-### Using the Official OpenRPC Generator
-
-You can also use the official `@open-rpc/generator`:
-
-```bash
-npm run generate:openrpc
+    Ok(())
+}
 ```
 
-This will generate clients based on the `open-rpc-generator-config.json` configuration.
+### Java
+
+```java
+import com.solana.rpc.SolanaRpcClient;
+
+public class Example {
+    public static void main(String[] args) throws Exception {
+        SolanaRpcClient client = new SolanaRpcClient(SolanaRpcClient.DEVNET);
+
+        // Get account balance
+        var balance = client.getBalance("YourPubkey...", null);
+
+        // Get current slot
+        var slot = client.getSlot(null);
+    }
+}
+```
+
+### C#
+
+```csharp
+using Solana.Rpc;
+
+var client = new SolanaRpcClient(SolanaRpcClient.Devnet);
+
+// Get account balance
+var balance = await client.GetBalanceAsync("YourPubkey...");
+
+// Get current slot
+var slot = await client.GetSlotAsync();
+```
+
+### PHP
+
+```php
+<?php
+use Solana\Rpc\SolanaRpcClient;
+
+$client = new SolanaRpcClient(SolanaRpcClient::DEVNET);
+
+// Get account balance
+$balance = $client->getBalance("YourPubkey...");
+
+// Get current slot
+$slot = $client->getSlot();
+```
+
+### Ruby
+
+```ruby
+require 'solana_rpc_client'
+
+client = Solana::RpcClient.new(Solana::RpcClient::DEVNET)
+
+# Get account balance
+balance = client.get_balance("YourPubkey...")
+
+# Get current slot
+slot = client.get_slot
+```
+
+### Swift
+
+```swift
+let client = SolanaRpcClient(endpoint: SolanaRpcClient.devnet)
+
+// Get account balance
+let balance = try await client.getBalance(pubkey: "YourPubkey...")
+
+// Get current slot
+let slot = try await client.getSlot()
+```
+
+### Kotlin
+
+```kotlin
+val client = SolanaRpcClient(SolanaRpcClient.DEVNET)
+
+// Get account balance
+val balance = client.getBalance("YourPubkey...")
+
+// Get current slot
+val slot = client.getSlot()
+```
+
+## Available RPC Methods (52)
+
+<details>
+<summary>Account Methods</summary>
+
+- `getAccountInfo` - Get all account information
+- `getBalance` - Get account balance in lamports
+- `getMultipleAccounts` - Get multiple accounts at once
+- `getProgramAccounts` - Get all accounts owned by a program
+- `getLargestAccounts` - Get largest accounts by balance
+</details>
+
+<details>
+<summary>Block Methods</summary>
+
+- `getBlock` - Get block information
+- `getBlockCommitment` - Get block commitment
+- `getBlockHeight` - Get current block height
+- `getBlockProduction` - Get block production stats
+- `getBlockTime` - Get block timestamp
+- `getBlocks` - Get confirmed blocks in range
+- `getBlocksWithLimit` - Get blocks with limit
+</details>
+
+<details>
+<summary>Transaction Methods</summary>
+
+- `getTransaction` - Get transaction details
+- `getSignatureStatuses` - Get signature statuses
+- `getSignaturesForAddress` - Get signatures for address
+- `getRecentPrioritizationFees` - Get recent priority fees
+- `sendTransaction` - Submit a transaction
+- `simulateTransaction` - Simulate a transaction
+</details>
+
+<details>
+<summary>Epoch & Slot Methods</summary>
+
+- `getEpochInfo` - Get current epoch info
+- `getEpochSchedule` - Get epoch schedule
+- `getSlot` - Get current slot
+- `getSlotLeader` - Get current slot leader
+- `getSlotLeaders` - Get slot leaders for range
+</details>
+
+<details>
+<summary>Token Methods</summary>
+
+- `getTokenAccountBalance` - Get SPL token balance
+- `getTokenAccountsByDelegate` - Get token accounts by delegate
+- `getTokenAccountsByOwner` - Get token accounts by owner
+- `getTokenLargestAccounts` - Get largest token accounts
+- `getTokenSupply` - Get token total supply
+</details>
+
+<details>
+<summary>Cluster Methods</summary>
+
+- `getClusterNodes` - Get cluster node info
+- `getVoteAccounts` - Get vote accounts
+- `getHealth` - Get node health
+- `getVersion` - Get Solana version
+- `getIdentity` - Get node identity
+</details>
+
+<details>
+<summary>Other Methods</summary>
+
+- `getFeeForMessage` - Get fee for message
+- `getMinimumBalanceForRentExemption` - Get rent exempt minimum
+- `getSupply` - Get supply info
+- `getStakeMinimumDelegation` - Get minimum stake
+- `getInflationGovernor` - Get inflation config
+- `getInflationRate` - Get current inflation rate
+- `getInflationReward` - Get staking rewards
+- `getLatestBlockhash` - Get latest blockhash
+- `getLeaderSchedule` - Get leader schedule
+- `isBlockhashValid` - Check blockhash validity
+- `requestAirdrop` - Request devnet/testnet airdrop
+- And more...
+</details>
 
 ## Project Structure
 
 ```
 solana-rpc-client-generator/
 ├── spec/
-│   └── solana-rpc.openrpc.json    # OpenRPC specification
+│   └── solana-rpc.openrpc.json     # OpenRPC specification
 ├── scripts/
-│   ├── generate-client.ts          # Custom TypeScript generator
-│   ├── fetch-docs.ts               # Tool to fetch RPC docs
-│   └── test-client.ts              # Test script
-├── generated/
-│   └── typescript/                 # Generated TypeScript client
-│       ├── types.ts                # Type definitions
-│       ├── client.ts               # RPC client class
-│       ├── index.ts                # Exports
-│       └── package.json
-├── open-rpc-generator-config.json  # Config for @open-rpc/generator
-└── package.json
+│   ├── generate-client.ts          # TypeScript generator
+│   ├── generate-python.ts          # Python generator
+│   ├── generate-go.ts              # Go generator
+│   ├── generate-rust.ts            # Rust generator
+│   ├── generate-java.ts            # Java generator
+│   ├── generate-csharp.ts          # C# generator
+│   ├── generate-php.ts             # PHP generator
+│   ├── generate-ruby.ts            # Ruby generator
+│   ├── generate-swift.ts           # Swift generator
+│   └── generate-kotlin.ts          # Kotlin generator
+├── bin/
+│   └── cli.ts                      # CLI tool
+├── examples/                       # Working examples for each language
+├── generated/                      # Generated clients
+│   ├── typescript/
+│   ├── python/
+│   ├── go/
+│   ├── rust/
+│   ├── java/
+│   ├── csharp/
+│   ├── php/
+│   ├── ruby/
+│   ├── swift/
+│   └── kotlin/
+└── .github/workflows/              # CI/CD
 ```
 
-## Development
+## Customization
 
-```bash
-# Install dependencies
-npm install
+### Adding New Methods
 
-# Fetch latest RPC documentation (optional)
-npm run fetch-docs
+1. Edit `spec/solana-rpc.openrpc.json`
+2. Add the method definition following the OpenRPC spec
+3. Run `npm run generate` to regenerate all clients
 
-# Generate the TypeScript client
-npm run generate
+### Creating a New Language Generator
 
-# Test the generated client
-npm test
+1. Create `scripts/generate-yourlang.ts`
+2. Follow the pattern of existing generators
+3. Add to `package.json` scripts
+4. Add example in `examples/yourlang/`
 
-# Build the generated client
-npm run build
-```
+## OpenRPC Specification
+
+The specification follows [OpenRPC 1.2.6](https://spec.open-rpc.org/) and is based on the official [Solana RPC documentation](https://solana.com/docs/rpc).
+
+## Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Update the spec if adding methods
+4. Regenerate clients
+5. Test your changes
+6. Submit a PR
 
 ## License
 
 MIT
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Update the OpenRPC spec if adding new methods
-4. Run the generator to update the client
-5. Test your changes
-6. Commit your changes (`git commit -m 'Add some amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## References
+## Links
 
 - [Solana RPC Documentation](https://solana.com/docs/rpc)
 - [OpenRPC Specification](https://spec.open-rpc.org/)
-- [OpenRPC Generator](https://github.com/open-rpc/generator)
+- [GitHub Repository](https://github.com/solana-clawd/solana-rpc-client-generator)
