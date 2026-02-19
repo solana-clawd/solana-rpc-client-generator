@@ -1,0 +1,8 @@
+[package]
+name = "solana-rpc-client-tests"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+solana-rpc-client = { path = "../../generated/rust" }
+tokio = { version = "1", features = ["full", "test-util"] }
