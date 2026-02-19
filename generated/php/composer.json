@@ -1,0 +1,6 @@
+{
+  "name": "solana/rpc-client",
+  "version": "2.0.0",
+  "autoload": { "psr-4": { "Solana\\Rpc\\": "src/" } },
+  "require": { "php": ">=8.0" }
+}
