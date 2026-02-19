@@ -5,11 +5,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "generate": "ts-node scripts/generate-client.ts",
+    "generate": "npm run generate:ts && npm run generate:go && npm run generate:python",
+    "generate:ts": "ts-node --esm scripts/generate-client.ts",
+    "generate:go": "ts-node --esm scripts/generate-go.ts",
+    "generate:python": "ts-node --esm scripts/generate-python.ts",
     "generate:openrpc": "open-rpc-generator generate -c open-rpc-generator-config.json",
-    "fetch-docs": "ts-node scripts/fetch-docs.ts",
-    "build": "npm run generate && cd generated/typescript && npm run build",
-    "test": "ts-node scripts/test-client.ts"
+    "fetch-docs": "ts-node --esm scripts/fetch-docs.ts",
+    "build": "npm run generate:ts && cd generated/typescript && tsc",
+    "test": "ts-node --esm scripts/test-client.ts"
   },
   "keywords": ["solana", "rpc", "openrpc", "client", "generator"],
   "author": "",

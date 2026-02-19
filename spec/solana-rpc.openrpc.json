@@ -1259,7 +1259,7 @@
           "owner": {
             "$ref": "#/components/schemas/Pubkey"
           },
-          "data": {},
+          "data": {"type": "object"},
           "executable": {
             "type": "boolean"
           },
@@ -1779,7 +1779,7 @@
           "confirmations": {
             "type": "integer"
           },
-          "err": {},
+          "err": {"type": "object"},
           "confirmationStatus": {
             "$ref": "#/components/schemas/Commitment"
           }
@@ -1814,7 +1814,7 @@
           "slot": {
             "$ref": "#/components/schemas/Slot"
           },
-          "err": {},
+          "err": {"type": "object"},
           "memo": {
             "type": "string"
           },
@@ -1994,20 +1994,20 @@
           "slot": {
             "$ref": "#/components/schemas/Slot"
           },
-          "transaction": {},
+          "transaction": {"type": "object"},
           "blockTime": {
             "type": "integer"
           },
           "meta": {
             "$ref": "#/components/schemas/TransactionMeta"
           },
-          "version": {}
+          "version": {"type": "object"}
         }
       },
       "TransactionMeta": {
         "type": "object",
         "properties": {
-          "err": {},
+          "err": {"type": "object"},
           "fee": {
             "type": "integer"
           },
@@ -2205,7 +2205,7 @@
           "value": {
             "type": "object",
             "properties": {
-              "err": {},
+              "err": {"type": "object"},
               "logs": {
                 "type": "array",
                 "items": {
