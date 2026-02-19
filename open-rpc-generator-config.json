@@ -1,0 +1,11 @@
+{
+  "openrpcDocument": "./spec/solana-rpc.openrpc.json",
+  "outDir": "./generated",
+  "components": [
+    {
+      "type": "client",
+      "name": "solana-rpc-client",
+      "language": "typescript"
+    }
+  ]
+}

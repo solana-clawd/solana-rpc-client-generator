@@ -1,0 +1,22 @@
+{
+  "name": "@solana-rpc/client",
+  "version": "2.0.0",
+  "description": "Solana JSON-RPC API specification for interacting with Solana nodes",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "solana-rpc-client-generator",
+  "version": "1.0.0",
+  "description": "OpenRPC-based client generator for Solana JSON-RPC API",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "generate": "ts-node scripts/generate-client.ts",
+    "generate:openrpc": "open-rpc-generator generate -c open-rpc-generator-config.json",
+    "fetch-docs": "ts-node scripts/fetch-docs.ts",
+    "build": "npm run generate && cd generated/typescript && npm run build",
+    "test": "ts-node scripts/test-client.ts"
+  },
+  "keywords": ["solana", "rpc", "openrpc", "client", "generator"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@open-rpc/generator": "^2.1.1",
+    "@open-rpc/meta-schema": "^1.14.9",
+    "@open-rpc/schema-utils-js": "^2.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

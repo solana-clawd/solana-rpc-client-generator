@@ -1,0 +1,2244 @@
+{
+  "openrpc": "1.2.6",
+  "info": {
+    "title": "Solana JSON-RPC API",
+    "version": "2.0.0",
+    "description": "Solana JSON-RPC API specification for interacting with Solana nodes"
+  },
+  "servers": [
+    {
+      "name": "Mainnet Beta",
+      "url": "https://api.mainnet-beta.solana.com"
+    },
+    {
+      "name": "Devnet",
+      "url": "https://api.devnet.solana.com"
+    },
+    {
+      "name": "Testnet",
+      "url": "https://api.testnet.solana.com"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getAccountInfo",
+      "summary": "Returns all information associated with the account of provided Pubkey",
+      "params": [
+        {
+          "name": "pubkey",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "description": "Pubkey of account to query, as base-58 encoded string"
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetAccountInfoConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/AccountInfoResponse"
+        }
+      }
+    },
+    {
+      "name": "getBalance",
+      "summary": "Returns the lamport balance of the account of provided Pubkey",
+      "params": [
+        {
+          "name": "pubkey",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/RpcResponseU64"
+        }
+      }
+    },
+    {
+      "name": "getBlock",
+      "summary": "Returns identity and transaction information about a confirmed block in the ledger",
+      "params": [
+        {
+          "name": "slot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetBlockConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Block"
+        }
+      }
+    },
+    {
+      "name": "getBlockCommitment",
+      "summary": "Returns commitment for particular block",
+      "params": [
+        {
+          "name": "slot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/BlockCommitment"
+        }
+      }
+    },
+    {
+      "name": "getBlockHeight",
+      "summary": "Returns the current block height of the node",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "name": "getBlockProduction",
+      "summary": "Returns recent block production information from the current or previous epoch",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetBlockProductionConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/BlockProduction"
+        }
+      }
+    },
+    {
+      "name": "getBlockTime",
+      "summary": "Returns the estimated production time of a block",
+      "params": [
+        {
+          "name": "slot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "integer",
+          "description": "Unix timestamp (seconds since epoch)"
+        }
+      }
+    },
+    {
+      "name": "getBlocks",
+      "summary": "Returns a list of confirmed blocks between two slots",
+      "params": [
+        {
+          "name": "startSlot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "endSlot",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      }
+    },
+    {
+      "name": "getBlocksWithLimit",
+      "summary": "Returns a list of confirmed blocks starting at the given slot",
+      "params": [
+        {
+          "name": "startSlot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "limit",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      }
+    },
+    {
+      "name": "getClusterNodes",
+      "summary": "Returns information about all the nodes participating in the cluster",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ClusterNode"
+          }
+        }
+      }
+    },
+    {
+      "name": "getEpochInfo",
+      "summary": "Returns information about the current epoch",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/EpochInfo"
+        }
+      }
+    },
+    {
+      "name": "getEpochSchedule",
+      "summary": "Returns the epoch schedule information from this cluster's genesis config",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/EpochSchedule"
+        }
+      }
+    },
+    {
+      "name": "getFeeForMessage",
+      "summary": "Returns the fee the network will charge for a particular message",
+      "params": [
+        {
+          "name": "message",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "description": "Base-64 encoded message"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/RpcResponseU64"
+        }
+      }
+    },
+    {
+      "name": "getFirstAvailableBlock",
+      "summary": "Returns the slot of the lowest confirmed block that has not been purged from the ledger",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Slot"
+        }
+      }
+    },
+    {
+      "name": "getGenesisHash",
+      "summary": "Returns the genesis hash",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Hash"
+        }
+      }
+    },
+    {
+      "name": "getHealth",
+      "summary": "Returns the current health of the node",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "string",
+          "enum": ["ok", "behind", "unknown"]
+        }
+      }
+    },
+    {
+      "name": "getHighestSnapshotSlot",
+      "summary": "Returns the highest slot information that the node has snapshots for",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/SnapshotSlotInfo"
+        }
+      }
+    },
+    {
+      "name": "getIdentity",
+      "summary": "Returns the identity pubkey for the current node",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Pubkey"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "getInflationGovernor",
+      "summary": "Returns the current inflation governor",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/InflationGovernor"
+        }
+      }
+    },
+    {
+      "name": "getInflationRate",
+      "summary": "Returns the specific inflation values for the current epoch",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/InflationRate"
+        }
+      }
+    },
+    {
+      "name": "getInflationReward",
+      "summary": "Returns the inflation / staking reward for a list of addresses for an epoch",
+      "params": [
+        {
+          "name": "addresses",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pubkey"
+            }
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetInflationRewardConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/InflationReward"
+          }
+        }
+      }
+    },
+    {
+      "name": "getLargestAccounts",
+      "summary": "Returns the 20 largest accounts, by lamport balance",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetLargestAccountsConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/RpcResponseLargestAccounts"
+        }
+      }
+    },
+    {
+      "name": "getLatestBlockhash",
+      "summary": "Returns the latest blockhash",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/LatestBlockhashResponse"
+        }
+      }
+    },
+    {
+      "name": "getLeaderSchedule",
+      "summary": "Returns the leader schedule for an epoch",
+      "params": [
+        {
+          "name": "slot",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetLeaderScheduleConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/LeaderSchedule"
+        }
+      }
+    },
+    {
+      "name": "getMaxRetransmitSlot",
+      "summary": "Get the max slot seen from retransmit stage",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Slot"
+        }
+      }
+    },
+    {
+      "name": "getMaxShredInsertSlot",
+      "summary": "Get the max slot seen from after shred insert",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Slot"
+        }
+      }
+    },
+    {
+      "name": "getMinimumBalanceForRentExemption",
+      "summary": "Returns minimum balance required to make account rent exempt",
+      "params": [
+        {
+          "name": "dataLength",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "name": "getMultipleAccounts",
+      "summary": "Returns the account information for a list of Pubkeys",
+      "params": [
+        {
+          "name": "pubkeys",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pubkey"
+            }
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetAccountInfoConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/MultipleAccountsResponse"
+        }
+      }
+    },
+    {
+      "name": "getProgramAccounts",
+      "summary": "Returns all accounts owned by the provided program Pubkey",
+      "params": [
+        {
+          "name": "programId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetProgramAccountsConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ProgramAccount"
+          }
+        }
+      }
+    },
+    {
+      "name": "getRecentPerformanceSamples",
+      "summary": "Returns a list of recent performance samples",
+      "params": [
+        {
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/PerformanceSample"
+          }
+        }
+      }
+    },
+    {
+      "name": "getRecentPrioritizationFees",
+      "summary": "Returns a list of prioritization fees from recent blocks",
+      "params": [
+        {
+          "name": "addresses",
+          "required": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pubkey"
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/PrioritizationFee"
+          }
+        }
+      }
+    },
+    {
+      "name": "getSignatureStatuses",
+      "summary": "Returns the statuses of a list of signatures",
+      "params": [
+        {
+          "name": "signatures",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Signature"
+            }
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetSignatureStatusesConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/SignatureStatusesResponse"
+        }
+      }
+    },
+    {
+      "name": "getSignaturesForAddress",
+      "summary": "Returns signatures for confirmed transactions that include the given address",
+      "params": [
+        {
+          "name": "address",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetSignaturesForAddressConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/SignatureInfo"
+          }
+        }
+      }
+    },
+    {
+      "name": "getSlot",
+      "summary": "Returns the slot that has reached the given or default commitment level",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Slot"
+        }
+      }
+    },
+    {
+      "name": "getSlotLeader",
+      "summary": "Returns the current slot leader",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Pubkey"
+        }
+      }
+    },
+    {
+      "name": "getSlotLeaders",
+      "summary": "Returns the slot leaders for a given slot range",
+      "params": [
+        {
+          "name": "startSlot",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        },
+        {
+          "name": "limit",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        }
+      }
+    },
+    {
+      "name": "getStakeMinimumDelegation",
+      "summary": "Returns the stake minimum delegation, in lamports",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/RpcResponseU64"
+        }
+      }
+    },
+    {
+      "name": "getSupply",
+      "summary": "Returns information about the current supply",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetSupplyConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/SupplyResponse"
+        }
+      }
+    },
+    {
+      "name": "getTokenAccountBalance",
+      "summary": "Returns the token balance of an SPL Token account",
+      "params": [
+        {
+          "name": "pubkey",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TokenBalanceResponse"
+        }
+      }
+    },
+    {
+      "name": "getTokenAccountsByDelegate",
+      "summary": "Returns all SPL Token accounts by approved Delegate",
+      "params": [
+        {
+          "name": "delegate",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "filter",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/TokenAccountsFilter"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetTokenAccountsConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TokenAccountsResponse"
+        }
+      }
+    },
+    {
+      "name": "getTokenAccountsByOwner",
+      "summary": "Returns all SPL Token accounts by token owner",
+      "params": [
+        {
+          "name": "owner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "filter",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/TokenAccountsFilter"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetTokenAccountsConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TokenAccountsResponse"
+        }
+      }
+    },
+    {
+      "name": "getTokenLargestAccounts",
+      "summary": "Returns the 20 largest accounts of a particular SPL Token type",
+      "params": [
+        {
+          "name": "mint",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TokenLargestAccountsResponse"
+        }
+      }
+    },
+    {
+      "name": "getTokenSupply",
+      "summary": "Returns the total supply of an SPL Token type",
+      "params": [
+        {
+          "name": "mint",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TokenBalanceResponse"
+        }
+      }
+    },
+    {
+      "name": "getTransaction",
+      "summary": "Returns transaction details for a confirmed transaction",
+      "params": [
+        {
+          "name": "signature",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Signature"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetTransactionConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/TransactionResponse"
+        }
+      }
+    },
+    {
+      "name": "getTransactionCount",
+      "summary": "Returns the current Transaction count from the ledger",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "name": "getVersion",
+      "summary": "Returns the current Solana version running on the node",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Version"
+        }
+      }
+    },
+    {
+      "name": "getVoteAccounts",
+      "summary": "Returns the account info and associated stake for all the voting accounts in the current bank",
+      "params": [
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/GetVoteAccountsConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/VoteAccountsResponse"
+        }
+      }
+    },
+    {
+      "name": "isBlockhashValid",
+      "summary": "Returns whether a blockhash is still valid or not",
+      "params": [
+        {
+          "name": "blockhash",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/RpcResponseBool"
+        }
+      }
+    },
+    {
+      "name": "minimumLedgerSlot",
+      "summary": "Returns the lowest slot that the node has information about in its ledger",
+      "params": [],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Slot"
+        }
+      }
+    },
+    {
+      "name": "requestAirdrop",
+      "summary": "Requests an airdrop of lamports to a Pubkey",
+      "params": [
+        {
+          "name": "pubkey",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        },
+        {
+          "name": "lamports",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/CommitmentConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Signature"
+        }
+      }
+    },
+    {
+      "name": "sendTransaction",
+      "summary": "Submits a signed transaction to the cluster for processing",
+      "params": [
+        {
+          "name": "transaction",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "description": "Fully-signed transaction, as encoded string"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/SendTransactionConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/Signature"
+        }
+      }
+    },
+    {
+      "name": "simulateTransaction",
+      "summary": "Simulate sending a transaction",
+      "params": [
+        {
+          "name": "transaction",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "description": "Transaction, as encoded string"
+          }
+        },
+        {
+          "name": "config",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/SimulateTransactionConfig"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "$ref": "#/components/schemas/SimulateTransactionResponse"
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Pubkey": {
+        "type": "string",
+        "description": "Base-58 encoded public key",
+        "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+      },
+      "Signature": {
+        "type": "string",
+        "description": "Base-58 encoded signature"
+      },
+      "Hash": {
+        "type": "string",
+        "description": "Base-58 encoded hash"
+      },
+      "Slot": {
+        "type": "integer",
+        "description": "Slot number"
+      },
+      "Commitment": {
+        "type": "string",
+        "enum": ["processed", "confirmed", "finalized"],
+        "description": "Commitment level"
+      },
+      "Encoding": {
+        "type": "string",
+        "enum": ["base58", "base64", "base64+zstd", "jsonParsed"],
+        "description": "Account data encoding"
+      },
+      "TransactionEncoding": {
+        "type": "string",
+        "enum": ["json", "jsonParsed", "base58", "base64"],
+        "description": "Transaction encoding"
+      },
+      "CommitmentConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetAccountInfoConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "encoding": {
+            "$ref": "#/components/schemas/Encoding"
+          },
+          "dataSlice": {
+            "$ref": "#/components/schemas/DataSlice"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "DataSlice": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer"
+          },
+          "length": {
+            "type": "integer"
+          }
+        }
+      },
+      "RpcContext": {
+        "type": "object",
+        "properties": {
+          "apiVersion": {
+            "type": "string"
+          },
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      },
+      "AccountInfo": {
+        "type": "object",
+        "properties": {
+          "lamports": {
+            "type": "integer"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "data": {},
+          "executable": {
+            "type": "boolean"
+          },
+          "rentEpoch": {
+            "type": "integer"
+          },
+          "space": {
+            "type": "integer"
+          }
+        }
+      },
+      "AccountInfoResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "$ref": "#/components/schemas/AccountInfo"
+          }
+        }
+      },
+      "RpcResponseU64": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "integer"
+          }
+        }
+      },
+      "RpcResponseBool": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetBlockConfig": {
+        "type": "object",
+        "properties": {
+          "encoding": {
+            "$ref": "#/components/schemas/TransactionEncoding"
+          },
+          "transactionDetails": {
+            "type": "string",
+            "enum": ["full", "accounts", "signatures", "none"]
+          },
+          "rewards": {
+            "type": "boolean"
+          },
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "maxSupportedTransactionVersion": {
+            "type": "integer"
+          }
+        }
+      },
+      "Block": {
+        "type": "object",
+        "properties": {
+          "blockhash": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "previousBlockhash": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "parentSlot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "transactions": {
+            "type": "array"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Signature"
+            }
+          },
+          "rewards": {
+            "type": "array"
+          },
+          "blockTime": {
+            "type": "integer"
+          },
+          "blockHeight": {
+            "type": "integer"
+          }
+        }
+      },
+      "BlockCommitment": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "totalStake": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetBlockProductionConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "range": {
+            "type": "object",
+            "properties": {
+              "firstSlot": {
+                "$ref": "#/components/schemas/Slot"
+              },
+              "lastSlot": {
+                "$ref": "#/components/schemas/Slot"
+              }
+            }
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        }
+      },
+      "BlockProduction": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "byIdentity": {
+                "type": "object"
+              },
+              "range": {
+                "type": "object",
+                "properties": {
+                  "firstSlot": {
+                    "$ref": "#/components/schemas/Slot"
+                  },
+                  "lastSlot": {
+                    "$ref": "#/components/schemas/Slot"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ClusterNode": {
+        "type": "object",
+        "properties": {
+          "pubkey": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "gossip": {
+            "type": "string"
+          },
+          "tpu": {
+            "type": "string"
+          },
+          "rpc": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "featureSet": {
+            "type": "integer"
+          },
+          "shredVersion": {
+            "type": "integer"
+          }
+        }
+      },
+      "EpochInfo": {
+        "type": "object",
+        "properties": {
+          "absoluteSlot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "blockHeight": {
+            "type": "integer"
+          },
+          "epoch": {
+            "type": "integer"
+          },
+          "slotIndex": {
+            "type": "integer"
+          },
+          "slotsInEpoch": {
+            "type": "integer"
+          },
+          "transactionCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "EpochSchedule": {
+        "type": "object",
+        "properties": {
+          "slotsPerEpoch": {
+            "type": "integer"
+          },
+          "leaderScheduleSlotOffset": {
+            "type": "integer"
+          },
+          "warmup": {
+            "type": "boolean"
+          },
+          "firstNormalEpoch": {
+            "type": "integer"
+          },
+          "firstNormalSlot": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      },
+      "SnapshotSlotInfo": {
+        "type": "object",
+        "properties": {
+          "full": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "incremental": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      },
+      "InflationGovernor": {
+        "type": "object",
+        "properties": {
+          "initial": {
+            "type": "number"
+          },
+          "terminal": {
+            "type": "number"
+          },
+          "taper": {
+            "type": "number"
+          },
+          "foundation": {
+            "type": "number"
+          },
+          "foundationTerm": {
+            "type": "number"
+          }
+        }
+      },
+      "InflationRate": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "validator": {
+            "type": "number"
+          },
+          "foundation": {
+            "type": "number"
+          },
+          "epoch": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetInflationRewardConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "epoch": {
+            "type": "integer"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "InflationReward": {
+        "type": "object",
+        "properties": {
+          "epoch": {
+            "type": "integer"
+          },
+          "effectiveSlot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "postBalance": {
+            "type": "integer"
+          },
+          "commission": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetLargestAccountsConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "filter": {
+            "type": "string",
+            "enum": ["circulating", "nonCirculating"]
+          }
+        }
+      },
+      "RpcResponseLargestAccounts": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/components/schemas/Pubkey"
+                },
+                "lamports": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "LatestBlockhashResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "blockhash": {
+                "$ref": "#/components/schemas/Hash"
+              },
+              "lastValidBlockHeight": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "GetLeaderScheduleConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        }
+      },
+      "LeaderSchedule": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "MultipleAccountsResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountInfo"
+            }
+          }
+        }
+      },
+      "GetProgramAccountsConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "encoding": {
+            "$ref": "#/components/schemas/Encoding"
+          },
+          "dataSlice": {
+            "$ref": "#/components/schemas/DataSlice"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountFilter"
+            }
+          },
+          "withContext": {
+            "type": "boolean"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "AccountFilter": {
+        "type": "object",
+        "properties": {
+          "memcmp": {
+            "type": "object",
+            "properties": {
+              "offset": {
+                "type": "integer"
+              },
+              "bytes": {
+                "type": "string"
+              },
+              "encoding": {
+                "type": "string"
+              }
+            }
+          },
+          "dataSize": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProgramAccount": {
+        "type": "object",
+        "properties": {
+          "pubkey": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "account": {
+            "$ref": "#/components/schemas/AccountInfo"
+          }
+        }
+      },
+      "PerformanceSample": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "numTransactions": {
+            "type": "integer"
+          },
+          "numSlots": {
+            "type": "integer"
+          },
+          "samplePeriodSecs": {
+            "type": "integer"
+          },
+          "numNonVoteTransactions": {
+            "type": "integer"
+          }
+        }
+      },
+      "PrioritizationFee": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "prioritizationFee": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetSignatureStatusesConfig": {
+        "type": "object",
+        "properties": {
+          "searchTransactionHistory": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SignatureStatusesResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SignatureStatus"
+            }
+          }
+        }
+      },
+      "SignatureStatus": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "confirmations": {
+            "type": "integer"
+          },
+          "err": {},
+          "confirmationStatus": {
+            "$ref": "#/components/schemas/Commitment"
+          }
+        }
+      },
+      "GetSignaturesForAddressConfig": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "before": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "until": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "SignatureInfo": {
+        "type": "object",
+        "properties": {
+          "signature": {
+            "$ref": "#/components/schemas/Signature"
+          },
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "err": {},
+          "memo": {
+            "type": "string"
+          },
+          "blockTime": {
+            "type": "integer"
+          },
+          "confirmationStatus": {
+            "$ref": "#/components/schemas/Commitment"
+          }
+        }
+      },
+      "GetSupplyConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "excludeNonCirculatingAccountsList": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SupplyResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "circulating": {
+                "type": "integer"
+              },
+              "nonCirculating": {
+                "type": "integer"
+              },
+              "nonCirculatingAccounts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Pubkey"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TokenBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "$ref": "#/components/schemas/TokenAmount"
+          }
+        }
+      },
+      "TokenAmount": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "decimals": {
+            "type": "integer"
+          },
+          "uiAmount": {
+            "type": "number"
+          },
+          "uiAmountString": {
+            "type": "string"
+          }
+        }
+      },
+      "TokenAccountsFilter": {
+        "type": "object",
+        "properties": {
+          "mint": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "programId": {
+            "$ref": "#/components/schemas/Pubkey"
+          }
+        }
+      },
+      "GetTokenAccountsConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "encoding": {
+            "$ref": "#/components/schemas/Encoding"
+          },
+          "dataSlice": {
+            "$ref": "#/components/schemas/DataSlice"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "TokenAccountsResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "pubkey": {
+                  "$ref": "#/components/schemas/Pubkey"
+                },
+                "account": {
+                  "$ref": "#/components/schemas/AccountInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TokenLargestAccountsResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/components/schemas/Pubkey"
+                },
+                "amount": {
+                  "type": "string"
+                },
+                "decimals": {
+                  "type": "integer"
+                },
+                "uiAmount": {
+                  "type": "number"
+                },
+                "uiAmountString": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetTransactionConfig": {
+        "type": "object",
+        "properties": {
+          "encoding": {
+            "$ref": "#/components/schemas/TransactionEncoding"
+          },
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "maxSupportedTransactionVersion": {
+            "type": "integer"
+          }
+        }
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "transaction": {},
+          "blockTime": {
+            "type": "integer"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/TransactionMeta"
+          },
+          "version": {}
+        }
+      },
+      "TransactionMeta": {
+        "type": "object",
+        "properties": {
+          "err": {},
+          "fee": {
+            "type": "integer"
+          },
+          "preBalances": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "postBalances": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "innerInstructions": {
+            "type": "array"
+          },
+          "preTokenBalances": {
+            "type": "array"
+          },
+          "postTokenBalances": {
+            "type": "array"
+          },
+          "logMessages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rewards": {
+            "type": "array"
+          },
+          "loadedAddresses": {
+            "type": "object",
+            "properties": {
+              "writable": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Pubkey"
+                }
+              },
+              "readonly": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Pubkey"
+                }
+              }
+            }
+          },
+          "computeUnitsConsumed": {
+            "type": "integer"
+          }
+        }
+      },
+      "Version": {
+        "type": "object",
+        "properties": {
+          "solana-core": {
+            "type": "string"
+          },
+          "feature-set": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetVoteAccountsConfig": {
+        "type": "object",
+        "properties": {
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "votePubkey": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "keepUnstakedDelinquents": {
+            "type": "boolean"
+          },
+          "delinquentSlotDistance": {
+            "type": "integer"
+          }
+        }
+      },
+      "VoteAccountsResponse": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteAccount"
+            }
+          },
+          "delinquent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteAccount"
+            }
+          }
+        }
+      },
+      "VoteAccount": {
+        "type": "object",
+        "properties": {
+          "votePubkey": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "nodePubkey": {
+            "$ref": "#/components/schemas/Pubkey"
+          },
+          "activatedStake": {
+            "type": "integer"
+          },
+          "epochVoteAccount": {
+            "type": "boolean"
+          },
+          "commission": {
+            "type": "integer"
+          },
+          "lastVote": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "epochCredits": {
+            "type": "array"
+          },
+          "rootSlot": {
+            "$ref": "#/components/schemas/Slot"
+          }
+        }
+      },
+      "SendTransactionConfig": {
+        "type": "object",
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "enum": ["base58", "base64"]
+          },
+          "skipPreflight": {
+            "type": "boolean"
+          },
+          "preflightCommitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "maxRetries": {
+            "type": "integer"
+          },
+          "minContextSlot": {
+            "type": "integer"
+          }
+        }
+      },
+      "SimulateTransactionConfig": {
+        "type": "object",
+        "properties": {
+          "sigVerify": {
+            "type": "boolean"
+          },
+          "commitment": {
+            "$ref": "#/components/schemas/Commitment"
+          },
+          "encoding": {
+            "type": "string",
+            "enum": ["base58", "base64"]
+          },
+          "replaceRecentBlockhash": {
+            "type": "boolean"
+          },
+          "accounts": {
+            "type": "object",
+            "properties": {
+              "encoding": {
+                "$ref": "#/components/schemas/Encoding"
+              },
+              "addresses": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Pubkey"
+                }
+              }
+            }
+          },
+          "minContextSlot": {
+            "type": "integer"
+          },
+          "innerInstructions": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SimulateTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/RpcContext"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "err": {},
+              "logs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "accounts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AccountInfo"
+                }
+              },
+              "unitsConsumed": {
+                "type": "integer"
+              },
+              "returnData": {
+                "type": "object",
+                "properties": {
+                  "programId": {
+                    "$ref": "#/components/schemas/Pubkey"
+                  },
+                  "data": {
+                    "type": "array"
+                  }
+                }
+              },
+              "innerInstructions": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
